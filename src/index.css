@@ -1,0 +1,36 @@
+@import "tailwindcss";
+
+:root {
+  /* Warm Beige Light Mode */
+  --bg-app: #FAF7F0;          /* Soft beautiful beige background */
+  --bg-card: #FFFFFF;         /* Pure white card for contrast */
+  --bg-sidebar: #FAF6ED;      /* Soft milk-beige sidebar */
+  --bg-panel: #F5EFE6;        /* Subtle beige panel */
+  --border-subtle: #EAE3D2;   /* Warm beige border */
+  --text-primary: #2C251B;    /* Warm deep charcoal text */
+  --text-secondary: #7A7060;  /* Muted warm gray text */
+  --text-muted: #A39885;      /* Lighter muted text */
+}
+
+.dark {
+  /* Modern Dark Slate Mode */
+  --bg-app: #090D16;          /* Deep dark canvas */
+  --bg-card: #121826;         /* Refined slate card */
+  --bg-sidebar: #0D1321;      /* Slightly darker sidebar */
+  --bg-panel: #1A2234;        /* Dark panel shade */
+  --border-subtle: #1F293D;   /* Dark border color */
+  --text-primary: #F8FAFC;    /* Bright primary text */
+  --text-secondary: #94A3B8;  /* Muted slate text */
+  --text-muted: #64748B;      /* Deeper muted text */
+}
+
+@theme {
+  --color-bg-app: var(--bg-app);
+  --color-bg-card: var(--bg-card);
+  --color-bg-sidebar: var(--bg-sidebar);
+  --color-bg-panel: var(--bg-panel);
+  --color-border-subtle: var(--border-subtle);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+}
