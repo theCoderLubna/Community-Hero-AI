@@ -3,7 +3,7 @@ import {
   MapPin, AlertCircle, CheckCircle2, Clock, ThumbsUp, Send, Trash2, 
   Sparkles, ShieldAlert, Award, PlusCircle, Layers, BarChart3, TrendingUp, 
   HelpCircle, UserCheck, MessageSquare, Flame, Trophy, Volume2, Globe, FileClock, Camera, RefreshCw,
-  Mic, MicOff, Check, Activity, TrendingDown, Users, Percent
+  Mic, MicOff, Check, Activity, TrendingDown, Users, Percent, Menu, X
 } from "lucide-react";
 import { 
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -18,7 +18,13 @@ export default function MainAppPrototype() {
   const [analytics, setAnalytics] = useState<AnalyticsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<string>("citizen-dashboard");
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState<boolean>(false);
   
+  // Close mobile sidebar on tab or role switch
+  useEffect(() => {
+    setMobileSidebarOpen(false);
+  }, [activeTab]);
+
   // Feed Filters
   const [categoryFilter, setCategoryFilter] = useState<string>("All");
   const [statusFilter, setStatusFilter] = useState<string>("All");
@@ -565,20 +571,30 @@ export default function MainAppPrototype() {
     <div className="flex flex-col h-screen bg-bg-app text-text-primary font-sans select-none overflow-hidden relative">
       
       {/* Simulation Header / Role Switcher */}
-      <div className="bg-bg-card border-b border-border-subtle px-6 py-2.5 flex flex-col md:flex-row md:items-center justify-between gap-4 shrink-0 z-10 transition-colors duration-200">
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-1.5 bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-100 dark:border-indigo-900 px-2.5 py-1 rounded-full text-xs text-indigo-600 dark:text-indigo-400 font-semibold animate-pulse">
-            <Sparkles className="w-3.5 h-3.5" /> AI Engine Live
-          </div>
-          <span className="text-border-subtle">|</span>
+      <div className="bg-bg-card border-b border-border-subtle px-4 md:px-6 py-2 md:py-2.5 flex flex-col md:flex-row md:items-center justify-between gap-3 shrink-0 z-10 transition-colors duration-200">
+        <div className="flex items-center justify-between w-full md:w-auto gap-3">
           <div className="flex items-center gap-2">
-            <span className="text-xs text-text-secondary">Simulation Persona:</span>
+            {/* Mobile Menu Toggle button */}
+            <button
+              onClick={() => setMobileSidebarOpen(!mobileSidebarOpen)}
+              className="p-1.5 rounded-lg bg-bg-panel border border-border-subtle text-text-primary hover:bg-bg-app transition lg:hidden cursor-pointer"
+              aria-label="Toggle navigation"
+            >
+              {mobileSidebarOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+            </button>
+            <div className="flex items-center gap-1.5 bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-100 dark:border-indigo-900 px-2 md:px-2.5 py-1 rounded-full text-[10px] md:text-xs text-indigo-600 dark:text-indigo-400 font-semibold animate-pulse">
+              <Sparkles className="w-3 md:w-3.5 h-3 md:h-3.5" /> <span className="hidden sm:inline">AI Engine Live</span><span className="sm:hidden">AI Live</span>
+            </div>
+          </div>
+          
+          <div className="flex items-center gap-1.5">
+            <span className="text-xs text-text-secondary hidden sm:inline">Simulation Persona:</span>
             <div className="inline-flex bg-bg-panel rounded-lg p-0.5 border border-border-subtle">
               {(["Citizen", "Volunteer", "Officer", "Admin"] as const).map((r) => (
                 <button
                   key={r}
                   onClick={() => handleRoleChange(r)}
-                  className={`px-3 py-1 rounded-md text-[11px] font-bold transition-all duration-150 cursor-pointer ${
+                  className={`px-2.5 md:px-3 py-1 rounded-md text-[10px] md:text-[11px] font-bold transition-all duration-150 cursor-pointer ${
                     activeRole === r 
                       ? "bg-indigo-600 text-white shadow-sm" 
                       : "text-text-secondary hover:text-text-primary"
@@ -592,20 +608,22 @@ export default function MainAppPrototype() {
         </div>
 
         {/* User Stats Quick-Bar */}
-        <div className="flex items-center gap-4 text-xs">
-          <div className="flex items-center gap-1 bg-bg-card px-2.5 py-1.5 rounded-lg border border-border-subtle shadow-sm">
-            <Award className="w-3.5 h-3.5 text-amber-500" />
-            <span className="text-text-secondary">Civic Pts:</span>
-            <strong className="text-text-primary font-mono">{activeUser?.points || "0"}</strong>
-          </div>
-          <div className="flex items-center gap-1 bg-bg-card px-2.5 py-1.5 rounded-lg border border-border-subtle shadow-sm">
-            <Flame className="w-3.5 h-3.5 text-orange-500 animate-pulse" />
-            <span className="text-text-secondary">Streak:</span>
-            <strong className="text-orange-500 font-mono">{activeUser?.streak || "0"}d</strong>
+        <div className="flex items-center justify-between md:justify-end w-full md:w-auto gap-3 text-xs border-t border-border-subtle/40 pt-1.5 md:border-t-0 md:pt-0">
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-1 bg-bg-card px-2 md:px-2.5 py-1 md:py-1.5 rounded-lg border border-border-subtle shadow-sm">
+              <Award className="w-3.5 h-3.5 text-amber-500" />
+              <span className="text-text-secondary text-[11px] md:text-xs">Civic Pts:</span>
+              <strong className="text-text-primary font-mono text-[11px] md:text-xs">{activeUser?.points || "0"}</strong>
+            </div>
+            <div className="flex items-center gap-1 bg-bg-card px-2 md:px-2.5 py-1 md:py-1.5 rounded-lg border border-border-subtle shadow-sm">
+              <Flame className="w-3.5 h-3.5 text-orange-500 animate-pulse" />
+              <span className="text-text-secondary text-[11px] md:text-xs">Streak:</span>
+              <strong className="text-orange-500 font-mono text-[11px] md:text-xs">{activeUser?.streak || "0"}d</strong>
+            </div>
           </div>
           <button 
             onClick={fetchData}
-            className="p-1.5 bg-bg-card border border-border-subtle rounded-lg hover:bg-bg-panel text-text-secondary hover:text-text-primary transition shadow-sm"
+            className="p-1.5 bg-bg-card border border-border-subtle rounded-lg hover:bg-bg-panel text-text-secondary hover:text-text-primary transition shadow-sm cursor-pointer"
             title="Refresh database"
           >
             <RefreshCw className="w-3.5 h-3.5" />
@@ -616,14 +634,32 @@ export default function MainAppPrototype() {
       {/* Main View Grid */}
       <div className="flex-1 flex overflow-hidden relative">
         
+        {/* Navigation Sidebar Drawer Overlay for Mobile */}
+        {mobileSidebarOpen && (
+          <div 
+            className="fixed inset-0 bg-black/50 z-30 lg:hidden backdrop-blur-sm"
+            onClick={() => setMobileSidebarOpen(false)}
+          />
+        )}
+
         {/* Navigation Sidebar Drawer */}
-        <div className="w-64 bg-bg-sidebar border-r border-border-subtle p-4 flex flex-col justify-between shrink-0 h-full transition-colors duration-200">
+        <div className={`fixed inset-y-0 left-0 z-40 w-64 bg-bg-sidebar border-r border-border-subtle p-4 flex flex-col justify-between shrink-0 h-full transition-all duration-300 lg:static lg:translate-x-0 ${
+          mobileSidebarOpen ? "translate-x-0" : "-translate-x-full"
+        }`}>
           <div className="space-y-6">
-            <div className="px-2">
-              <span className="text-[10px] font-bold text-text-muted tracking-widest uppercase">Ecosystem Space</span>
-              <h1 className="text-base font-black text-text-primary tracking-tight mt-1 flex items-center gap-1.5">
-                Community Hero AI
-              </h1>
+            <div className="px-2 flex items-center justify-between">
+              <div>
+                <span className="text-[10px] font-bold text-text-muted tracking-widest uppercase">Ecosystem Space</span>
+                <h1 className="text-base font-black text-text-primary tracking-tight mt-1 flex items-center gap-1.5">
+                  Community Hero AI
+                </h1>
+              </div>
+              <button 
+                onClick={() => setMobileSidebarOpen(false)}
+                className="p-1 rounded-md text-text-secondary hover:text-text-primary hover:bg-bg-panel lg:hidden cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
             </div>
 
             <nav className="space-y-1">
@@ -711,7 +747,7 @@ export default function MainAppPrototype() {
 
 
         {/* Content Body */}
-        <div className="flex-1 overflow-y-auto bg-bg-app p-6 relative transition-colors duration-200">
+        <div className="flex-1 overflow-y-auto bg-bg-app p-4 sm:p-6 relative transition-colors duration-200">
           
           {loading && (
             <div className="absolute inset-0 bg-bg-app/80 z-50 flex flex-col items-center justify-center gap-3 backdrop-blur-sm">
